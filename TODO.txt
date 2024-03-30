@@ -1,0 +1,8 @@
+1. Code a random graph generator
+2. Implement Bellman-Ford
+3. Align GUI with Bellman-Ford implementation
+    i. Provide step-by-step walkthrough
+    ii. Show current path distances
+
+4. Proof of Correctness
+5. Runtime Analysis
