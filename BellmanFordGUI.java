@@ -28,7 +28,7 @@ public class BellmanFordGUI extends JFrame {
         inputPanel.add(sourcePanel);
 
         inputArea = new JTextArea(10, 50);
-        inputArea.setText("0 1 2\n0 2 3\n1 3 4\n1 4 5\n2 3 1\n3 4 2");
+        inputArea.setText("0 2 3 0 0\n0 0 0 4 5\n0 0 0 1 0\n0 0 0 0 2\n0 0 0 0 0");
         JScrollPane scrollPane = new JScrollPane(inputArea);
         inputPanel.add(scrollPane);
 
@@ -71,11 +71,10 @@ public class BellmanFordGUI extends JFrame {
         Random random = new Random();
         for (int i = 0; i < V; i++) {
             for (int j = 0; j < V; j++) {
-                if (i != j) {
-                    int weight = random.nextInt(20) - 10;
-                    sb.append(i).append(" ").append(j).append(" ").append(weight).append("\n");
-                }
+                int weight = (i == j) ? 0 : random.nextInt(20) - 10;
+                sb.append(weight).append(" ");
             }
+            sb.append("\n");
         }
         inputArea.setText(sb.toString());
     }
@@ -99,22 +98,29 @@ public class BellmanFordGUI extends JFrame {
         return graph;
     }
 
-
-        String[] lines = input.split("\n");
-        for (String line : lines) {
-            String[] parts = line.trim().split(" ");
-            if (parts.length != 3) {
-                throw new IllegalArgumentException("Invalid line format: " + line);
-            }
-            int u = Integer.parseInt(parts[0]);
-            int v = Integer.parseInt(parts[1]);
-            int weight = Integer.parseInt(parts[2]);
-            graph[u][v] = weight;
-        }
-        return graph;
-    }
-
     private int[] bellmanFord(int[][] graph, int src) {
+        int[] dist = new int[V];
+        for (int i = 0; i < V; ++i)
+            dist[i] = Integer.MAX_VALUE;
+        dist[src] = 0;
+
+        for (int i = 1; i < V; ++i) {
+            for (int u = 0; u < V; ++u) {
+                for (int v = 0; v < V; ++v) {
+                    if (graph[u][v] != Integer.MAX_VALUE && dist[u] != Integer.MAX_VALUE && dist[u] + graph[u][v] < dist[v])
+                        dist[v] = dist[u] + graph[u][v];
+                }
+            }
+        }
+
+        for (int u = 0; u < V; ++u) {
+            for (int v = 0; v < V; ++v) {
+                if (graph[u][v] != Integer.MAX_VALUE && dist[u] != Integer.MAX_VALUE && dist[u] + graph[u][v] < dist[v])
+                    throw new RuntimeException("Graph contains a negative-weight cycle");
+            }
+        }
+
+        return dist;
     }
 
     public static void main(String[] args) {
