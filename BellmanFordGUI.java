@@ -65,19 +65,20 @@ public class BellmanFordGUI extends JFrame {
             outputArea.setText("Error: " + ex.getMessage());
         }
     }
-
-    private void generateRandomGraph(ActionEvent e) {
+    
+       private void generateRandomGraph(ActionEvent e) {
         StringBuilder sb = new StringBuilder();
         Random random = new Random();
         for (int i = 0; i < V; i++) {
             for (int j = 0; j < V; j++) {
-                int weight = (i == j) ? 0 : random.nextInt(20) - 10;
+                int weight = (i == j) ? 0 : random.nextInt(20); // Generate weights from 0 to 19
                 sb.append(weight).append(" ");
             }
             sb.append("\n");
         }
         inputArea.setText(sb.toString());
     }
+
     private int[][] parseGraph(String input) {
         String[] lines = input.split("\n");
         if (lines.length != V) {
