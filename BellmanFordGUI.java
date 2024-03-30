@@ -9,12 +9,13 @@ public class BellmanFordGUI extends JFrame {
     private JTextArea outputArea;
     private JButton runButton;
     private JButton randomButton;
+    private GraphPanel graphPanel;
     private int[][] graph;
     private final int V = 5; // Number of vertices in graph
 
     public BellmanFordGUI() {
         setTitle("Bellman-Ford Algorithm");
-        setSize(600, 400);
+        setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 
@@ -49,6 +50,9 @@ public class BellmanFordGUI extends JFrame {
         outputArea.setEditable(false);
         add(new JScrollPane(outputArea), BorderLayout.SOUTH);
 
+        graphPanel = new GraphPanel(new int[V][V]);
+        add(graphPanel, BorderLayout.EAST);
+
         setVisible(true);
     }
 
@@ -61,12 +65,14 @@ public class BellmanFordGUI extends JFrame {
             outputArea.setText("Vertex Distance from Source\n");
             for (int i = 0; i < distances.length; ++i)
                 outputArea.append(i + "\t\t" + distances[i] + "\n");
+
+            graphPanel.updateGraph(graph);
         } catch (Exception ex) {
             outputArea.setText("Error: " + ex.getMessage());
         }
     }
-    
-       private void generateRandomGraph(ActionEvent e) {
+
+    private void generateRandomGraph(ActionEvent e) {
         StringBuilder sb = new StringBuilder();
         Random random = new Random();
         for (int i = 0; i < V; i++) {
@@ -98,7 +104,6 @@ public class BellmanFordGUI extends JFrame {
         }
         return graph;
     }
-
 
     private int[] bellmanFord(int[][] graph, int src) {
         int[] dist = new int[V];
