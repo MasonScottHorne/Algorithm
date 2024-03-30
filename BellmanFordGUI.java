@@ -78,13 +78,13 @@ public class BellmanFordGUI extends JFrame {
         }
         inputArea.setText(sb.toString());
     }
-
     private int[][] parseGraph(String input) {
         String[] lines = input.split("\n");
         if (lines.length != V) {
             throw new IllegalArgumentException("Input must have " + V + " lines for " + V + " vertices.");
         }
         int[][] graph = new int[V][V];
+        int NO_EDGE = -1; // Special value to represent the absence of an edge
         for (int i = 0; i < V; i++) {
             String[] parts = lines[i].trim().split("\\s+");
             if (parts.length != V) {
@@ -92,11 +92,12 @@ public class BellmanFordGUI extends JFrame {
             }
             for (int j = 0; j < V; j++) {
                 int weight = Integer.parseInt(parts[j]);
-                graph[i][j] = (weight >= 0) ? weight : Integer.MAX_VALUE;
+                graph[i][j] = (weight != NO_EDGE) ? weight : Integer.MAX_VALUE;
             }
         }
         return graph;
     }
+
 
     private int[] bellmanFord(int[][] graph, int src) {
         int[] dist = new int[V];
