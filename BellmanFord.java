@@ -6,27 +6,25 @@ public class BellmanFord {
     // Generates a random adjacency matrix
     public static int[][] graphGen() {
         Random rand = new Random(System.currentTimeMillis());
-        int n = 4;
+        int n = 5;
         int[][] adjMatrix = new int[n][n];
 
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
                 if (i == j) adjMatrix[i][j] = 0;
                 else {
-                    adjMatrix[j][i] = rand.nextInt(10) - 5;
+                    adjMatrix[i][j] = rand.nextInt(10) - 3;
+                    //adjMatrix[j][i] = 0;
                 }
             }
         }
-
         return adjMatrix;
     }
 
     // Bellman-Ford Algorithm
     public static Integer[] BellmanFord(int[][] weight, int s) {
 
-        int INF = Integer.MAX_VALUE;
-
-        int numVertices = weight.length;
+        int INF = Integer.MAX_VALUE, numVertices = weight.length;
         Integer[] dist = new Integer[numVertices], 
                 prev = new Integer[numVertices];
         Boolean noUpdates = false;
@@ -37,25 +35,39 @@ public class BellmanFord {
         }
 
         dist[s] = 0;
+        int count = 0;
 
-        do {
+        // Runtime: O(n^3)
+        while(!noUpdates) { // O(n)
             noUpdates = true;
-            for (int u = 0; u < numVertices; u++) {
-                for (int v = 0; v < numVertices; v++) {
-                    if ((dist[v] > dist[u] + weight[u][v]) && (prev[v] == null)) { // If the distance to v through u creates the shortest path
+            for (int u = 0; u < numVertices; u++) { // O(n)
+                for (int v = 0; v < numVertices; v++) { // O(n)
+                    if ((dist[v] > dist[u] + weight[u][v])) { // If the distance to v through u creates the shortest path
                         dist[v] = dist[u] + weight[u][v];
                         prev[v] = u;
                         noUpdates = false;
                     }
                 }
             }
+            if (count == numVertices) {
+                System.out.println("Negative cycle detected.");
+                return null;
+            }
+            count++;
+
         }
-        while (!noUpdates);
 
         return dist;
     }
     public static void main(String[] args) {
         int[][] graph = graphGen();
+    
+        for (int i = 0; i < 500000; i++) {
+            graph = graphGen();
+            if (BellmanFord(graph, 0) != null) {
+                break;
+            }
+        }
         
         System.out.println("\nAdjacency Matrix of G:\n");
         for (int i = 0; i < graph.length; i++) {
