@@ -81,16 +81,24 @@ public class BellmanFordGUI extends JFrame {
     }
 
     private int[][] parseGraph(String input) {
+        String[] lines = input.split("\n");
+        if (lines.length != V) {
+            throw new IllegalArgumentException("Input must have " + V + " lines for " + V + " vertices.");
+        }
         int[][] graph = new int[V][V];
         for (int i = 0; i < V; i++) {
+            String[] parts = lines[i].trim().split("\\s+");
+            if (parts.length != V) {
+                throw new IllegalArgumentException("Line " + (i + 1) + " must have " + V + " numbers.");
+            }
             for (int j = 0; j < V; j++) {
-                if (i == j) {
-                    graph[i][j] = 0;
-                } else {
-                    graph[i][j] = Integer.MAX_VALUE;
-                }
+                int weight = Integer.parseInt(parts[j]);
+                graph[i][j] = (weight >= 0) ? weight : Integer.MAX_VALUE;
             }
         }
+        return graph;
+    }
+
 
         String[] lines = input.split("\n");
         for (String line : lines) {
