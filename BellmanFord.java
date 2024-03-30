@@ -1,8 +1,8 @@
 import java.util.Random;
 import java.util.Arrays;
 
-public class BellmanFord {
-    
+public class BellmanFord 
+
     // Generates a random adjacency matrix
     public static int[][] graphGen() {
         Random rand = new Random(System.currentTimeMillis());
@@ -60,14 +60,10 @@ public class BellmanFord {
         return dist;
     }
     public static void main(String[] args) {
+
+        
+
         int[][] graph = graphGen();
-    
-        for (int i = 0; i < 500000; i++) {
-            graph = graphGen();
-            if (BellmanFord(graph, 0) != null) {
-                break;
-            }
-        }
         
         System.out.println("\nAdjacency Matrix of G:\n");
         for (int i = 0; i < graph.length; i++) {
