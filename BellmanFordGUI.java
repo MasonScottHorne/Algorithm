@@ -27,8 +27,8 @@ public class BellmanFordGUI extends JFrame {
         sourcePanel.add(sourceField);
         inputPanel.add(sourcePanel);
 
-        inputArea = new JTextArea(5, 40);
-        inputArea.setText("0 1 -1\n0 2 4\n1 2 3\n1 3 2\n1 4 2\n3 2 5\n3 1 1\n4 3 -3");
+        inputArea = new JTextArea(10, 50);
+        inputArea.setText("0 1 2\n0 2 3\n1 3 4\n1 4 5\n2 3 1\n3 4 2");
         JScrollPane scrollPane = new JScrollPane(inputArea);
         inputPanel.add(scrollPane);
 
@@ -81,23 +81,32 @@ public class BellmanFordGUI extends JFrame {
     }
 
     private int[][] parseGraph(String input) {
-        String[] lines = input.split("\n");
-        int[][] graph = new int[lines.length][3];
-        for (int i = 0; i < lines.length; i++) {
-            String[] parts = lines[i].trim().split(" ");
-            if (parts.length != 3) {
-                throw new IllegalArgumentException("Invalid line format: " + lines[i]);
+        int[][] graph = new int[V][V];
+        for (int i = 0; i < V; i++) {
+            for (int j = 0; j < V; j++) {
+                if (i == j) {
+                    graph[i][j] = 0;
+                } else {
+                    graph[i][j] = Integer.MAX_VALUE;
+                }
             }
-            graph[i][0] = Integer.parseInt(parts[0]);
-            graph[i][1] = Integer.parseInt(parts[1]);
-            graph[i][2] = Integer.parseInt(parts[2]);
+        }
+
+        String[] lines = input.split("\n");
+        for (String line : lines) {
+            String[] parts = line.trim().split(" ");
+            if (parts.length != 3) {
+                throw new IllegalArgumentException("Invalid line format: " + line);
+            }
+            int u = Integer.parseInt(parts[0]);
+            int v = Integer.parseInt(parts[1]);
+            int weight = Integer.parseInt(parts[2]);
+            graph[u][v] = weight;
         }
         return graph;
     }
 
-
     private int[] bellmanFord(int[][] graph, int src) {
-      
     }
 
     public static void main(String[] args) {
